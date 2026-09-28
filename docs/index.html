@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Element Copy</title>
+<style>
+  body { font: 16px/1.6 system-ui, sans-serif; max-width: 640px; margin: 32px auto; padding: 0 16px; color: #222; background: #fff; }
+  a.btn { display: inline-block; padding: 10px 18px; background: #1a73e8; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; }
+  .note { background: #fff7e0; border-left: 4px solid #e0a800; padding: 8px 12px; }
+</style>
+</head>
+<body>
+<h1>Site Element Copy</h1>
+<p>A small Chrome extension. On one site you choose, pressing 2–6 keys you choose copies the text of one page element to your clipboard. It works only in Chrome and only on that site, it ignores typing in form fields, and it sends no data anywhere.</p>
+
+<p><a class="btn" href="chrome-element-copy.zip" download>Download chrome-element-copy.zip</a></p>
+
+<h2>Install</h2>
+<ol>
+  <li>Unzip the file into a folder you will keep. Chrome loads the extension from that folder.</li>
+  <li>Open <code>chrome://extensions</code> (type it into the address bar).</li>
+  <li>Turn on <b>Developer mode</b> (top right).</li>
+  <li>Click <b>Load unpacked</b> and select the unzipped folder (the one that contains <code>manifest.json</code>).</li>
+  <li>In the settings page that opens, enter the site, a CSS selector and 2–6 keys, then click <b>Save</b> and allow access to the site.</li>
+</ol>
+<p>To find a selector, right-click the element on the page and choose <b>Inspect</b>. Then right-click the highlighted node and choose <b>Copy → Copy selector</b>.</p>
+
+<h2>Why not a one-click install?</h2>
+<p class="note">Chrome on Windows and Mac does not let websites install extensions directly. A <code>.crx</code> file downloaded from a website, including this one, will not install with one click. One-click install is only available through the Chrome Web Store or on company-managed computers. For everyone else, the zip with <b>Load unpacked</b> is the supported way to install.</p>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Site Element Copy</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; max-width: 460px; margin: 24px auto; padding: 0 16px; }
+  label { display: block; margin: 12px 0 4px; font-weight: 600; }
+  input[type=text] { width: 100%; box-sizing: border-box; padding: 6px; font: inherit; }
+  small { color: #666; }
+  button { margin-top: 16px; padding: 6px 14px; font: inherit; }
+  #status { margin-left: 8px; }
+  .err { color: #b91c1c; } .ok { color: #15803d; }
+</style>
+</head>
+<body>
+<h1>Site Element Copy</h1>
+<label for="host">Site host or URL fragment</label>
+<input id="host" type="text" placeholder="psssbtyping.com">
+<label for="selector">CSS selector</label>
+<input id="selector" type="text" placeholder="#sample-paragraph">
+<label for="keys">Trigger keys (2–6 unique characters)</label>
+<input id="keys" type="text" maxlength="6" placeholder="afj;">
+<small>Case-insensitive. Ignored while typing in form fields.</small>
+<label>Trigger</label>
+<label style="font-weight:normal"><input type="radio" name="mode" value="sequence" checked> Sequence (press one after another)</label>
+<label style="font-weight:normal"><input type="radio" name="mode" value="chord"> Chord (hold all together)</label>
+<button id="save">Save</button><span id="status"></span>
+<div><button id="grant" hidden>Grant access to this site</button></div>
+<script src="options.js"></script>
+</body>
+</html>
