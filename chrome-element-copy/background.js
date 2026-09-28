@@ -25,9 +25,13 @@ async function doSync() {
 }
 
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
-chrome.runtime.onInstalled.addListener((d) => {
+// Preset for psssbtyping.com; its host access is granted in manifest.json, so it works right after install.
+const DEFAULTS = { host: 'psssbtyping.com', selector: '#sample-paragraph', keys: 'afj;', mode: 'chord' };
+
+chrome.runtime.onInstalled.addListener(async () => {
+  const { host } = await chrome.storage.sync.get('host');
+  if (!host) await chrome.storage.sync.set(DEFAULTS);
   sync();
-  if (d.reason === 'install') chrome.runtime.openOptionsPage();
 });
 chrome.storage.onChanged.addListener((c, area) => area === 'sync' && c.host && sync());
 chrome.permissions.onAdded.addListener(sync);

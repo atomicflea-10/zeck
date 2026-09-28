@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Site Element Copy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Press 2–6 chosen keys on one chosen site to copy one element's text to the clipboard.",
   "permissions": ["storage", "clipboardWrite", "scripting"],
+  "host_permissions": ["*://psssbtyping.com/*", "*://*.psssbtyping.com/*"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
   "background": { "service_worker": "background.js" },
   "action": { "default_title": "Site Element Copy settings" },

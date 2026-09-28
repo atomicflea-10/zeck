@@ -45,13 +45,8 @@ $('grant').onclick = async () => {
   refreshGrant();
 };
 
-// Pre-filled for psssbtyping.com until the user saves their own settings.
-const DEFAULTS = { host: 'psssbtyping.com', selector: '#sample-paragraph', keys: 'afj;', mode: 'chord' };
-
 chrome.storage.sync.get(null, (s) => {
-  savedHost = s.host || '';
-  if (!s.host) s = DEFAULTS;
-  $('host').value = s.host || '';
+  $('host').value = savedHost = s.host || '';
   $('selector').value = s.selector || '';
   $('keys').value = s.keys || '';
   if (s.mode === 'chord') document.querySelector('input[value=chord]').checked = true;

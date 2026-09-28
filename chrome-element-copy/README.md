@@ -13,8 +13,8 @@ A Chrome extension (Manifest V3). On one site you choose, pressing 2–6 keys yo
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and select the unzipped folder (the one that contains `manifest.json`).
-5. The options page opens. You can reopen it any time by clicking the toolbar icon.
-6. Fill in the host, the selector, 2–6 trigger keys and a trigger mode, then click **Save**. When Chrome asks for access to the site, click **Allow**.
+5. Done. It comes preset for psssbtyping.com: hold `a` `f` `j` `;` together to copy `#sample-paragraph`.
+6. To use a different site, click the toolbar icon, change the fields and click **Save**. When Chrome asks for access to the new site, click **Allow**.
 
 Tabs on that site that are already open start working right away, without a reload.
 
