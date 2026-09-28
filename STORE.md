@@ -15,11 +15,11 @@ Upload file: `docs/zeck.zip` (manifest.json at zip root).
 
   > Copy the text of one page element with a keyboard chord.
   >
-  > Choose a website, a CSS selector and 2–6 keys. On that site only, pressing the keys (together, or one after another) copies the element's text to your clipboard and shows a short "Copied" toast.
+  > On psssbtyping.com, holding a + f + j + ; together copies the text of one element (a CSS selector you set) to your clipboard and shows a short "Copied" toast.
   >
-  > Preset for psssbtyping.com: hold a + f + j + ; to copy the typing passage (#sample-paragraph). Change the site, selector and keys from the settings page (click the toolbar icon).
+  > The default element is #sample-paragraph. Change it from the settings page (click the toolbar icon).
   >
-  > • Works only on the one site you choose
+  > • Works only on psssbtyping.com
   > • Ignores keys typed in text boxes and form fields
   > • No data leaves your browser: no servers, no analytics, no tracking
 
@@ -30,11 +30,11 @@ Upload file: `docs/zeck.zip` (manifest.json at zip root).
 
 ## 4. Privacy practices tab
 - **Single purpose:**
-  > Copy the text of one user-chosen element on one user-chosen website to the clipboard when the user presses a chosen key combination.
-- **storage:** Saves the user's settings (site, CSS selector, trigger keys, trigger mode).
+  > Copy the text of one user-chosen element on psssbtyping.com to the clipboard when the user presses a chosen key combination.
+- **storage:** Saves the user's settings (the CSS selector).
 - **clipboardWrite:** Writes the chosen element's text to the clipboard when the user presses the trigger keys.
-- **scripting:** Registers the content script only on the single site the user has chosen and granted access to.
-- **Host permission (psssbtyping.com and optional sites):** The content script must run on the chosen site to read the chosen element's text when the trigger keys are pressed. psssbtyping.com is the preset site; any other site is requested at runtime only for the single host the user enters.
+- **scripting:** Registers the content script only on psssbtyping.com.
+- **Host permission (psssbtyping.com):** The content script must run on psssbtyping.com to read the chosen element's text when the trigger keys are pressed.
 - **Remote code:** No, I am not using remote code.
 - **Data usage:** tick nothing (no data collected). Tick all three certifications (not sold, not used for unrelated purposes, not used for creditworthiness).
 - **Privacy policy URL:** not required when no user data is collected; if the form insists, use `https://atomicflea-10.github.io/zeck/`.

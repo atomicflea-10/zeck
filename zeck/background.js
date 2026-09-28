@@ -25,12 +25,12 @@ async function doSync() {
 }
 
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
-// Preset for psssbtyping.com; its host access is granted in manifest.json, so it works right after install.
+// Fixed site and keys; only the selector is user-editable. Host access is granted in manifest.json.
 const DEFAULTS = { host: 'psssbtyping.com', selector: '#sample-paragraph', keys: 'afj;', mode: 'chord' };
 
 chrome.runtime.onInstalled.addListener(async () => {
-  const { host } = await chrome.storage.sync.get('host');
-  if (!host) await chrome.storage.sync.set(DEFAULTS);
+  const { selector } = await chrome.storage.sync.get('selector');
+  await chrome.storage.sync.set({ ...DEFAULTS, selector: selector || DEFAULTS.selector });
   sync();
 });
 chrome.storage.onChanged.addListener((c, area) => area === 'sync' && c.host && sync());

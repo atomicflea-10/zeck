@@ -1,8 +1,8 @@
 # Zeck
 
-A Chrome extension (Manifest V3). On one site you choose, pressing 2–6 keys you choose copies the text of one page element to the clipboard.
+A Chrome extension (Manifest V3). On psssbtyping.com, holding a + f + j + ; copies the text of one page element to the clipboard.
 
-- It runs only in Chrome, and only on the host you configure (and its subdomains).
+- It runs only in Chrome, and only on psssbtyping.com (and its subdomains).
 - It ignores keys typed in `input`, `textarea`, `select` and contenteditable elements, and keys pressed with Ctrl, Alt or Meta.
 - It sends nothing over the network. There is no analytics, no remote code and no `eval`.
 - It reads the live page only at the moment you press the trigger. It never polls.
@@ -14,7 +14,7 @@ A Chrome extension (Manifest V3). On one site you choose, pressing 2–6 keys yo
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and select the unzipped folder (the one that contains `manifest.json`).
 5. Done. It comes preset for psssbtyping.com: hold `a` `f` `j` `;` together to copy `#sample-paragraph`.
-6. To use a different site, click the toolbar icon, change the fields and click **Save**. When Chrome asks for access to the new site, click **Allow**.
+6. To copy a different element, click the toolbar icon, change the CSS selector and click **Save**. The site and keys are fixed.
 
 Tabs on that site that are already open start working right away, without a reload.
 
@@ -30,15 +30,14 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 
 ## Behaviour and limits
 
-- **Sequence** mode: press the keys in order, with no more than 1.5 s between presses. **Chord** mode: hold all the keys down together.
-- Example: host `psssbtyping.com`, selector `#sample-paragraph`, keys `afj;`, Chord. Click outside the typing box first, because keys typed into form fields are ignored.
+- Hold `a` `f` `j` `;` down together. The default element is `#sample-paragraph`.
+- Click outside the typing box first, because keys typed into form fields are ignored.
 - Keys are case-insensitive. Held-key auto-repeat and IME composition are ignored.
 - The trigger fires at most once every 600 ms.
 - The copied text is `(innerText || textContent).trim()` of the first element that matches the selector.
 - Toasts: green **Copied**, or red **Not configured**, **Invalid selector**, **Element missing**, **Element empty** or **Clipboard blocked**.
 - Only the top frame is checked. Elements inside iframes or closed shadow roots are not reachable.
 - Chrome does not allow extensions on `chrome://` pages, the Chrome Web Store or other extensions' pages.
-- The host field is also matched as a substring of the full URL, so `example.com/shop` limits the extension to URLs that contain that text.
 
 ## 3. Publishing to the Chrome Web Store (outline)
 
@@ -50,11 +49,11 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
    - **Private**: limited to your Google Workspace domain or to named testers.
 4. Store listing: a description, a 128×128 icon (add `"icons"` to the manifest), at least one 1280×800 or 640×400 screenshot, and a category.
 5. Privacy tab:
-   - Single purpose: "Copy the text of one user-chosen element on one user-chosen site when the user presses a chosen key combination."
+   - Single purpose: "Copy the text of one user-chosen element on psssbtyping.com when the user presses a chosen key combination."
    - `storage`: saves the user's settings.
    - `clipboardWrite`: writes the element text to the clipboard.
-   - `scripting`: registers the content script only on the site the user grants.
-   - Optional host permissions: requested at runtime for the single host the user enters. No host access is granted at install.
+   - `scripting`: registers the content script only on psssbtyping.com.
+   - Host permission: psssbtyping.com only.
    - Remote code: **No**. Data collection: **None**.
 6. Submit for review. Review usually takes a few days.
 
