@@ -1,4 +1,4 @@
-# Site Element Copy
+# Zeck
 
 A Chrome extension (Manifest V3). On one site you choose, pressing 2–6 keys you choose copies the text of one page element to the clipboard.
 
@@ -9,7 +9,7 @@ A Chrome extension (Manifest V3). On one site you choose, pressing 2–6 keys yo
 
 ## 1. Install (Load unpacked)
 
-1. Unzip `chrome-element-copy.zip` into a folder you will keep. Chrome loads the extension from that folder, so don't delete it.
+1. Unzip `zeck.zip` into a folder you will keep. Chrome loads the extension from that folder, so don't delete it.
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and select the unzipped folder (the one that contains `manifest.json`).
@@ -43,7 +43,7 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 ## 3. Publishing to the Chrome Web Store (outline)
 
 1. Register at the Chrome Web Store Developer Dashboard. There is a **one-time $5 developer fee**.
-2. Upload `chrome-element-copy.zip`, which has `manifest.json` at the zip root.
+2. Upload `zeck.zip`, which has `manifest.json` at the zip root.
 3. Choose the visibility:
    - **Public**: listed and searchable.
    - **Unlisted**: installable by anyone who has the link, but not searchable. This is a good fit for a personal or small-team tool.
@@ -69,7 +69,7 @@ Upload the `docs/` folder to any static host (this repo serves it with GitHub Pa
 This works only on machines whose Chrome is managed by policy: Windows joined to Active Directory or enrolled in Chrome Browser Cloud Management, Mac enrolled in MDM, or Linux.
 
 1. Add `"update_url": "https://YOUR-HOST/updates.xml"` to `manifest.json`.
-2. In `chrome://extensions`, use **Pack extension** to build `chrome-element-copy.crx` and a `.pem` key. Keep the key private, because it fixes the extension ID. Note the ID.
+2. In `chrome://extensions`, use **Pack extension** to build `zeck.crx` and a `.pem` key. Keep the key private, because it fixes the extension ID. Note the ID.
 3. Fill in `docs/updates.xml` with the ID, the version and the `.crx` URL, then upload the `.crx` and `updates.xml` over HTTPS.
 4. Set these policies through GPO, the Admin console or an MDM profile:
    - `ExtensionInstallSources`: `["https://YOUR-HOST/*"]`

@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Site Element Copy",
+  "name": "Zeck",
   "version": "1.1.0",
-  "description": "Press 2–6 chosen keys on one chosen site to copy one element's text to the clipboard.",
+  "description": "Keyboard shortcut helper for one chosen website.",
   "permissions": ["storage", "clipboardWrite", "scripting"],
   "host_permissions": ["*://psssbtyping.com/*", "*://*.psssbtyping.com/*"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
   "icons": { "128": "icon128.png" },
   "background": { "service_worker": "background.js" },
-  "action": { "default_icon": "icon128.png", "default_title": "Site Element Copy settings" },
+  "action": { "default_icon": "icon128.png", "default_title": "Zeck settings" },
   "options_ui": { "page": "options.html", "open_in_tab": true }
 }

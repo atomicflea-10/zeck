@@ -3,6 +3,6 @@
      Replace EXTENSION_ID, VERSION and YOUR-HOST. VERSION must match manifest.json. -->
 <gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
   <app appid="EXTENSION_ID">
-    <updatecheck codebase="https://YOUR-HOST/chrome-element-copy.crx" version="VERSION" />
+    <updatecheck codebase="https://YOUR-HOST/zeck.crx" version="VERSION" />
   </app>
 </gupdate>

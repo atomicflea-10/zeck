@@ -1,6 +1,6 @@
 # Chrome Web Store submission — copy/paste sheet
 
-Upload file: `docs/chrome-element-copy.zip` (manifest.json at zip root).
+Upload file: `docs/zeck.zip` (manifest.json at zip root).
 
 ## 1. One-time setup
 1. Go to https://chrome.google.com/webstore/devconsole and sign in with the Google account that should own the listing.
@@ -8,7 +8,7 @@ Upload file: `docs/chrome-element-copy.zip` (manifest.json at zip root).
 3. **Account** tab: set a contact email and verify it (the upload is blocked until verified).
 
 ## 2. Upload
-**Items → New item →** choose `docs/chrome-element-copy.zip`.
+**Items → New item →** choose `docs/zeck.zip`.
 
 ## 3. Store listing tab
 - **Description:**
@@ -25,7 +25,7 @@ Upload file: `docs/chrome-element-copy.zip` (manifest.json at zip root).
 
 - **Category:** Productivity (Tools)
 - **Language:** English
-- **Store icon:** `chrome-element-copy/icon128.png`
+- **Store icon:** `zeck/icon128.png`
 - **Screenshot (required, at least 1):** 1280×800 or 640×400 PNG/JPEG. Take one of psssbtyping.com showing the green "Copied" toast, or of the settings page. Resize to exactly 1280×800.
 
 ## 4. Privacy practices tab
