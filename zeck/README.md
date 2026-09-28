@@ -35,7 +35,7 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 - Keys are case-insensitive. Held-key auto-repeat and IME composition are ignored.
 - The trigger fires at most once every 600 ms.
 - The copied text is `(innerText || textContent).trim()` of the first element that matches the selector.
-- Toasts: green **Copied**, or red **Not configured**, **Invalid selector**, **Element missing**, **Element empty** or **Clipboard blocked**.
+- Copying is silent: nothing appears on the page, whether it worked or not. To check, paste (Ctrl+V) somewhere.
 - Only the top frame is checked. Elements inside iframes or closed shadow roots are not reachable.
 - Chrome does not allow extensions on `chrome://` pages, the Chrome Web Store or other extensions' pages.
 

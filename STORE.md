@@ -15,7 +15,7 @@ Upload file: `docs/zeck.zip` (manifest.json at zip root).
 
   > Copy the text of one page element with a keyboard chord.
   >
-  > On psssbtyping.com, holding ੋ + ਿ + ਰ + ਚ together (the A F J ; keys) copies the text of one element (a CSS selector you set) to your clipboard and shows a short "Copied" toast.
+  > On psssbtyping.com, holding ੋ + ਿ + ਰ + ਚ together (the A F J ; keys) copies the text of one element (a CSS selector you set) to your clipboard. Nothing is shown on the page.
   >
   > The default element is #sample-paragraph. Change it from the settings page (click the toolbar icon).
   >
@@ -26,7 +26,7 @@ Upload file: `docs/zeck.zip` (manifest.json at zip root).
 - **Category:** Productivity (Tools)
 - **Language:** English
 - **Store icon:** `zeck/icon128.png`
-- **Screenshot (required, at least 1):** 1280×800 or 640×400 PNG/JPEG. Take one of psssbtyping.com showing the green "Copied" toast, or of the settings page. Resize to exactly 1280×800.
+- **Screenshot (required, at least 1):** 1280×800 or 640×400 PNG/JPEG. Take one of the settings page. Resize to exactly 1280×800.
 
 ## 4. Privacy practices tab
 - **Single purpose:**

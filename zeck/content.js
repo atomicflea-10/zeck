@@ -46,14 +46,12 @@
     const now = Date.now();
     if (now - lastFire < 600) return;
     lastFire = now;
-    if (!cfg.selector) return toast('Not configured', false);
+    // Copies silently: nothing is shown on the page, whether or not it works.
+    if (!cfg.selector) return;
     let el;
-    try { el = document.querySelector(cfg.selector); } catch { return toast('Invalid selector', false); }
-    if (!el) return toast('Element missing', false);
-    const text = (el.innerText || el.textContent || '').trim();
-    if (!text) return toast('Element empty', false);
-    const copied = await copy(text);
-    toast(copied ? 'Copied' : 'Clipboard blocked', copied);
+    try { el = document.querySelector(cfg.selector); } catch { return; }
+    const text = el && (el.innerText || el.textContent || '').trim();
+    if (text) await copy(text);
   }
 
   async function copy(t) {
@@ -70,17 +68,5 @@
     ta.remove();
     if (prev && prev.focus) prev.focus();
     return ok;
-  }
-
-  let toastEl;
-  function toast(msg, good) {
-    if (toastEl) toastEl.remove();
-    const d = (toastEl = document.createElement('div'));
-    d.textContent = msg;
-    d.style.cssText = 'all:initial;position:fixed;z-index:2147483647;right:16px;bottom:16px;' +
-      'padding:8px 14px;border-radius:6px;font:600 13px/1.3 system-ui,sans-serif;color:#fff;' +
-      'box-shadow:0 2px 8px rgba(0,0,0,.3);background:' + (good ? '#15803d' : '#b91c1c');
-    document.documentElement.appendChild(d);
-    setTimeout(() => d.remove(), 1500);
   }
 })();
