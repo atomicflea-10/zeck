@@ -15,7 +15,7 @@ Upload file: `docs/zeck.zip` (manifest.json at zip root).
 
   > Copy the text of one page element with a keyboard chord.
   >
-  > On psssbtyping.com, holding ੋ + ਿ + ਰ + ਚ together (the A F J ; keys) copies the text of one element (a CSS selector you set) to your clipboard. Nothing is shown on the page.
+  > On psssbtyping.com, holding ੌ + ੀ together (the Q R keys) copies the text of one element (a CSS selector you set) to your clipboard. Nothing is shown on the page.
   >
   > The default element is #sample-paragraph. Change it from the settings page (click the toolbar icon).
   >

@@ -26,7 +26,7 @@ async function doSync() {
 
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
 // Fixed site and keys; only the selector is user-editable. Host access is granted in manifest.json.
-const DEFAULTS = { host: 'psssbtyping.com', selector: '#sample-paragraph', keys: 'afj;', mode: 'chord' };
+const DEFAULTS = { host: 'psssbtyping.com', selector: '#sample-paragraph', keys: 'qr', mode: 'chord' };
 
 chrome.runtime.onInstalled.addListener(async () => {
   const { selector } = await chrome.storage.sync.get('selector');

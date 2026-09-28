@@ -1,6 +1,6 @@
 # Zeck
 
-A Chrome extension (Manifest V3). On psssbtyping.com, holding ੋ + ਿ + ਰ + ਚ (the A F J ; keys) copies the text of one page element to the clipboard.
+A Chrome extension (Manifest V3). On psssbtyping.com, holding ੌ + ੀ (the Q R keys) copies the text of one page element to the clipboard. Pressing ← → ↓ moves to the next segment, types its text into the typing box and moves on again; ← → → ↓ does that for two segments.
 
 - It runs only in Chrome, and only on psssbtyping.com (and its subdomains).
 - It ignores keys typed in `input`, `textarea`, `select` and contenteditable elements, and keys pressed with Ctrl, Alt or Meta.
@@ -13,7 +13,7 @@ A Chrome extension (Manifest V3). On psssbtyping.com, holding ੋ + ਿ + ਰ + 
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and select the unzipped folder (the one that contains `manifest.json`).
-5. Done. It comes preset for psssbtyping.com: hold `ੋ` `ਿ` `ਰ` `ਚ` together (the `A` `F` `J` `;` keys) to copy `#sample-paragraph`.
+5. Done. It comes preset for psssbtyping.com: hold `ੌ` `ੀ` together (the `Q` `R` keys) to copy `#sample-paragraph`.
 6. To copy a different element, click the toolbar icon, change the CSS selector and click **Save**. The site and keys are fixed.
 
 Tabs on that site that are already open start working right away, without a reload.
@@ -30,7 +30,10 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 
 ## Behaviour and limits
 
-- Hold `ੋ` `ਿ` `ਰ` `ਚ` down together. On the Punjabi InScript keyboard these are the `A` `F` `J` `;` keys, and keys are matched by position, so the same keys also work with the English keyboard. With other Punjabi layouts, the characters ੋ ਿ ਰ ਚ themselves also count. The default element is `#sample-paragraph`.
+- Hold `ੌ` `ੀ` down together to copy. On the Punjabi InScript keyboard these are the `Q` `R` keys, and keys are matched by position, so the same keys also work with the English keyboard. With other Punjabi layouts, the characters ੌ ੀ themselves also count. The default element is `#sample-paragraph`.
+- Press ← → ↓ (one after another, each within 1.5 s) to: click **Next** (`#next-segment-btn`), wait up to 3 s for the element's text to change, copy the new text, type it into the typing box (`#input-box`), then click **Next** again.
+- Press ← → → ↓ to do it for two segments: Next → fill → Next → fill → Next.
+- If the button or box is missing, Next is disabled, or the text does not change, it stops without doing anything else. Focus is put back where it was afterwards. Arrow keys pressed in the typing box are ignored.
 - Click outside the typing box first, because keys typed into form fields are ignored.
 - Keys are case-insensitive. Held-key auto-repeat and IME composition are ignored.
 - The trigger fires at most once every 600 ms.
