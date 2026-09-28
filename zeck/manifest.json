@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Zeck",
-  "version": "1.4.0",
-  "description": "Keyboard shortcut helper for one chosen website.",
+  "version": "1.4.1",
+  "description": "Lang assist",
   "permissions": ["storage", "clipboardWrite", "scripting"],
   "host_permissions": ["*://psssbtyping.com/*", "*://*.psssbtyping.com/*"],
   "icons": { "128": "icon128.png" },
