@@ -37,6 +37,7 @@
     const n = arrows.endsWith('LRRD') ? 2 : arrows.endsWith('LRD') ? 1 : 0;
     if (!n) return;
     e.preventDefault();
+    swallow.add('arrowdown'); // focus moves to the box; a held ↓ must not move its cursor
     arrows = '';
     fillNext(n);
   }
@@ -115,7 +116,6 @@
   async function fillNext(n) {
     if (busy) return;
     busy = true;
-    const prev = document.activeElement;
     try {
       let before = sourceText();
       if (!clickNext()) return;
@@ -125,13 +125,14 @@
         if (!text || !box) return;
         await copy(text);
         fill(box, text);
-        restoreFocus(prev);
         await sleep(200); // let the page register the input before moving on
         if (!clickNext()) return;
         before = text;
       }
     } finally {
-      restoreFocus(prev); // in case the page moved focus into the box
+      // Leave the cursor in the typing box, at the end of its text.
+      const box = document.querySelector(INPUT);
+      if (box) { box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
       busy = false;
     }
   }
@@ -147,14 +148,6 @@
       box.value = text;
       box.dispatchEvent(new Event('input', { bubbles: true }));
     }
-  }
-
-  // Puts focus back where it was, so later key presses are not typed into the box.
-  function restoreFocus(prev) {
-    const now = document.activeElement;
-    if (now === prev) return;
-    if (now && now.blur) now.blur();
-    if (prev && prev !== document.body && prev.focus) prev.focus();
   }
 
   async function copy(t) {

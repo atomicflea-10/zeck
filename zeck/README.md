@@ -34,7 +34,7 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 - Hold `ੌ` `ੀ` `ਜ` (the `Q` `R` `P` keys) together to paste: whatever is in the typing box (`#input-box`) is replaced with the element's text, and the cursor is left at the end of it in the box. The held keys are kept from typing into the box until you release them. As with the other keys, start with the cursor outside the typing box; to use it again, click outside the box first.
 - Press ← → ↓ (one after another, each within 1.5 s) to: click **Next** (`#next-segment-btn`), wait up to 3 s for the element's text to change, copy the new text, type it into the typing box (`#input-box`), then click **Next** again.
 - Press ← → → ↓ to do it for two segments: Next → fill → Next → fill → Next.
-- If the button or box is missing, Next is disabled, or the text does not change, it stops without doing anything else. Focus is put back where it was afterwards. Arrow keys pressed in the typing box are ignored.
+- If the button or box is missing, Next is disabled, or the text does not change, it stops without doing anything else. Afterwards the cursor is left in the typing box, at the end of its text, and a held ↓ is kept from moving it until released. Arrow keys pressed in the typing box are ignored, so click outside the box before the next sequence.
 - Click outside the typing box first, because keys typed into form fields are ignored.
 - Keys are case-insensitive. Held-key auto-repeat and IME composition are ignored.
 - The trigger fires at most once every 600 ms.
