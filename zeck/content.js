@@ -6,7 +6,7 @@
   document.addEventListener('sec:reset', () => ac.abort(), { once: true });
 
   let cfg = {}, buf = [], lastKey = 0, lastFire = 0;
-  const held = new Set();
+  const held = new Set(), swallow = new Set();
   const load = () => chrome.storage.sync.get(null, (s) => (cfg = s || {}));
   load();
   chrome.storage.onChanged.addListener((c, area) => area === 'sync' && !ac.signal.aborted && load());
@@ -17,10 +17,11 @@
     return el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
   };
 
-  // The trigger is the Gurmukhi chord ੌ ੀ. On the Punjabi InScript keyboard these are the
-  // physical keys Q R, so keys are matched by position (e.code) and work with an English
-  // layout too. GURMUKHI also maps the characters themselves, for layouts that put them elsewhere.
-  const GURMUKHI = { 'ੌ': 'q', 'ੀ': 'r' };
+  // The trigger is the Gurmukhi chord ੌ ੀ, plus ਜ to paste. On the Punjabi InScript keyboard
+  // these are the physical keys Q R P, so keys are matched by position (e.code) and work with an
+  // English layout too. GURMUKHI also maps the characters, for layouts that put them elsewhere.
+  const GURMUKHI = { 'ੌ': 'q', 'ੀ': 'r', 'ਜ': 'p' };
+  const PASTE_KEY = 'p';
   const norm = (e) => GURMUKHI[e.key] || (/^Key[A-Z]$/.test(e.code) && e.code[3].toLowerCase()) ||
     (e.key || '').toLowerCase();
 
@@ -41,6 +42,8 @@
   }
 
   addEventListener('keydown', (e) => {
+    // After a paste the cursor is in the box; keys still held from the chord must not type there.
+    if (swallow.has(norm(e))) return e.preventDefault();
     if (e.repeat || e.isComposing || e.keyCode === 229 || e.ctrlKey || e.metaKey || e.altKey) return;
     if (editable(e) || !onSite()) return;
     if (ARROWS[e.key]) return arrow(e);
@@ -48,7 +51,10 @@
     const k = norm(e), keys = cfg.keys.toLowerCase();
     if (cfg.mode === 'chord') {
       held.add(k);
-      if ([...keys].every((c) => held.has(c))) fire();
+      if (![...keys].every((c) => held.has(c))) return;
+      // ੌ ੀ copies; ੌ ੀ ਜ pastes into the box. preventDefault stops ਜ landing in the box,
+      // which has focus by the time the key's default action runs.
+      if (held.has(PASTE_KEY)) { e.preventDefault(); paste(); } else fire();
       return;
     }
     const now = Date.now();
@@ -57,8 +63,16 @@
     buf = [...buf, k].slice(-keys.length);
     if (buf.join('') === keys) { buf = []; fire(); }
   }, opt);
-  addEventListener('keyup', (e) => held.delete(norm(e)), opt);
-  addEventListener('blur', () => held.clear(), opt);
+  addEventListener('keyup', (e) => { held.delete(norm(e)); swallow.delete(norm(e)); }, opt);
+  addEventListener('blur', () => { held.clear(); swallow.clear(); }, opt);
+
+  // Replaces whatever is in the typing box with the element's text and leaves the cursor there.
+  function paste() {
+    const text = sourceText(), box = document.querySelector(INPUT);
+    if (!text || !box) return;
+    fill(box, text);
+    held.forEach((k) => swallow.add(k));
+  }
 
   async function fire() {
     const now = Date.now();
@@ -111,6 +125,7 @@
         if (!text || !box) return;
         await copy(text);
         fill(box, text);
+        restoreFocus(prev);
         await sleep(200); // let the page register the input before moving on
         if (!clickNext()) return;
         before = text;
@@ -121,9 +136,9 @@
     }
   }
 
-  // Inserts the text as if typed, so the page's own input handlers see it.
+  // Replaces the box's contents with the text as if typed, so the page's own input handlers see
+  // it. Leaves the cursor at the end of the text in the box.
   function fill(box, text) {
-    const prev = document.activeElement;
     box.focus();
     box.select();
     let ok = false;
@@ -132,7 +147,6 @@
       box.value = text;
       box.dispatchEvent(new Event('input', { bubbles: true }));
     }
-    restoreFocus(prev);
   }
 
   // Puts focus back where it was, so later key presses are not typed into the box.

@@ -1,6 +1,6 @@
-# Zeck
+# Dark
 
-A Chrome extension (Manifest V3). On psssbtyping.com, holding ੌ + ੀ (the Q R keys) copies the text of one page element to the clipboard. Pressing ← → ↓ moves to the next segment, types its text into the typing box and moves on again; ← → → ↓ does that for two segments.
+A Chrome extension (Manifest V3). On psssbtyping.com, holding ੌ + ੀ (the Q R keys) copies the text of one page element to the clipboard. Holding ੌ + ੀ + ਜ (Q R P) puts that text into the typing box, replacing what is there. Pressing ← → ↓ moves to the next segment, types its text into the typing box and moves on again; ← → → ↓ does that for two segments.
 
 - It runs only in Chrome, and only on psssbtyping.com (and its subdomains).
 - It ignores keys typed in `input`, `textarea`, `select` and contenteditable elements, and keys pressed with Ctrl, Alt or Meta.
@@ -31,6 +31,7 @@ Selectors that DevTools generates can be brittle (for example `#root > div:nth-c
 ## Behaviour and limits
 
 - Hold `ੌ` `ੀ` down together to copy. On the Punjabi InScript keyboard these are the `Q` `R` keys, and keys are matched by position, so the same keys also work with the English keyboard. With other Punjabi layouts, the characters ੌ ੀ themselves also count. The default element is `#sample-paragraph`.
+- Hold `ੌ` `ੀ` `ਜ` (the `Q` `R` `P` keys) together to paste: whatever is in the typing box (`#input-box`) is replaced with the element's text, and the cursor is left at the end of it in the box. The held keys are kept from typing into the box until you release them. As with the other keys, start with the cursor outside the typing box; to use it again, click outside the box first.
 - Press ← → ↓ (one after another, each within 1.5 s) to: click **Next** (`#next-segment-btn`), wait up to 3 s for the element's text to change, copy the new text, type it into the typing box (`#input-box`), then click **Next** again.
 - Press ← → → ↓ to do it for two segments: Next → fill → Next → fill → Next.
 - If the button or box is missing, Next is disabled, or the text does not change, it stops without doing anything else. Focus is put back where it was afterwards. Arrow keys pressed in the typing box are ignored.

@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Zeck",
-  "version": "1.4.1",
+  "name": "Dark",
+  "version": "1.6.0",
   "description": "Lang assist",
   "permissions": ["storage", "clipboardWrite", "scripting"],
   "host_permissions": ["*://psssbtyping.com/*", "*://*.psssbtyping.com/*"],
   "icons": { "128": "icon128.png" },
   "background": { "service_worker": "background.js" },
-  "action": { "default_icon": "icon128.png", "default_title": "Zeck settings" },
+  "action": { "default_icon": "icon128.png", "default_title": "Dark settings" },
   "options_ui": { "page": "options.html", "open_in_tab": true }
 }

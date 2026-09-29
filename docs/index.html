@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zeck</title>
+<title>Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;600&display=swap" rel="stylesheet">
 <style>
   body { font: 16px/1.6 system-ui, sans-serif; max-width: 640px; margin: 32px auto; padding: 0 16px; color: #222; background: #fff; }
   a.btn { display: inline-block; padding: 3px 10px; background: #1a73e8; color: #fff; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600; }
@@ -13,14 +16,50 @@
   [popover] { max-width: 360px; margin: auto; padding: 16px 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2); font-size: 14px; }
   [popover]::backdrop { background: rgba(0,0,0,.2); }
   @media (max-width: 400px) { [popover] { max-width: calc(100vw - 32px); } }
+  #pa { display: block; width: 100%; box-sizing: border-box; min-height: 220px; margin-top: 24px; padding: 12px;
+    font: 20px/1.7 'Noto Sans Gurmukhi', Raavi, sans-serif; border: 1px solid #ccc; border-radius: 6px; resize: vertical; }
+  #pa:focus { outline: 2px solid #1a73e8; outline-offset: -1px; border-color: transparent; }
+  label.pa { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 14px; color: #555; }
 </style>
 </head>
 <body>
 
 <p><a class="btn" href="zeck.zip" download>i</a></p>
 
+<textarea id="pa" placeholder="ਇੱਥੇ ਪੰਜਾਬੀ ਟਾਈਪ ਕਰੋ…" spellcheck="false" lang="pa" aria-label="Punjabi typing box"></textarea>
+<label class="pa"><input id="inscript" type="checkbox" checked> English keys → ਪੰਜਾਬੀ (InScript)</label>
 
-
+<script>
+// Punjabi InScript layout by physical key: [normal, with Shift]. Keys not listed type as usual.
+// If the OS keyboard is already Punjabi, the browser gives Gurmukhi characters and they pass through.
+const INSCRIPT = {
+  Backquote: ['ੱ', ''],
+  KeyQ: ['ੌ', 'ਔ'], KeyW: ['ੈ', 'ਐ'], KeyE: ['ਾ', 'ਆ'], KeyR: ['ੀ', 'ਈ'], KeyT: ['ੂ', 'ਊ'],
+  KeyY: ['ਬ', 'ਭ'], KeyU: ['ਹ', 'ਙ'], KeyI: ['ਗ', 'ਘ'], KeyO: ['ਦ', 'ਧ'], KeyP: ['ਜ', 'ਝ'],
+  BracketLeft: ['ਡ', 'ਢ'], BracketRight: ['਼', 'ਞ'],
+  KeyA: ['ੋ', 'ਓ'], KeyS: ['ੇ', 'ਏ'], KeyD: ['੍', 'ਅ'], KeyF: ['ਿ', 'ਇ'], KeyG: ['ੁ', 'ਉ'],
+  KeyH: ['ਪ', 'ਫ'], KeyJ: ['ਰ', 'ੜ'], KeyK: ['ਕ', 'ਖ'], KeyL: ['ਤ', 'ਥ'], Semicolon: ['ਚ', 'ਛ'], Quote: ['ਟ', 'ਠ'],
+  KeyX: ['ਂ', 'ੰ'], KeyC: ['ਮ', 'ਣ'], KeyV: ['ਨ', ''], KeyB: ['ਵ', ''], KeyN: ['ਲ', 'ਲ਼'], KeyM: ['ਸ', 'ਸ਼'],
+  Period: ['', '।'], Slash: ['ਯ', ''],
+};
+const pa = document.getElementById('pa'), on = document.getElementById('inscript');
+pa.addEventListener('keydown', (e) => {
+  if (!on.checked || e.ctrlKey || e.metaKey || e.altKey || e.isComposing) return;
+  if (e.key.length !== 1 || e.key.charCodeAt(0) > 127) return; // not a typed ASCII key
+  const ch = (INSCRIPT[e.code] || [])[e.shiftKey ? 1 : 0];
+  if (!ch) return;
+  e.preventDefault();
+  // insertText keeps Ctrl+Z working; setRangeText is the fallback.
+  if (!document.execCommand('insertText', false, ch)) {
+    pa.setRangeText(ch, pa.selectionStart, pa.selectionEnd, 'end');
+  }
+});
+try { on.checked = localStorage.getItem('inscript') !== 'off'; } catch {}
+on.addEventListener('change', () => {
+  try { localStorage.setItem('inscript', on.checked ? 'on' : 'off'); } catch {}
+  pa.focus();
+});
+</script>
 
 </body>
 </html>
