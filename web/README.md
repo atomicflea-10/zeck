@@ -2,12 +2,12 @@
 
 A web page with a box for checking keyboard keys, and a bookmark that adds the Dark extension's keys to the site. No extension needed.
 
-Page: **https://eoffice-noting.vercel.app**
+Page: **https://eo1.vercel.app** (also https://eoffice-noting.vercel.app)
 
 ## On a new computer
 
 1. Open Chrome and press **Ctrl+Shift+B** (Mac: **Cmd+Shift+B**) to show the bookmarks bar.
-2. Open **eoffice-noting.vercel.app**.
+2. Open **eo1.vercel.app**.
 3. Drag the blue **eOffice noting** button onto the bookmarks bar.
 4. Open the site and click the bookmark. A small **On** appears in the corner.
 5. After every reload of the site, click the bookmark again.
