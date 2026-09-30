@@ -2,7 +2,7 @@
 
 A web page with a box for checking keyboard keys, and a bookmark that adds the Dark extension's keys to the site. No extension needed.
 
-Page: **https://eo1.vercel.app** (also https://eoffice-noting.vercel.app)
+Page: **https://eo1.vercel.app**
 
 ## On a new computer
 
