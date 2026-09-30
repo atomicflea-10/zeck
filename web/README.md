@@ -29,7 +29,7 @@ Click outside the site's typing box first.
 | Hold ੌ ੀ (Q R) | Copies `#sample-paragraph` to the clipboard |
 | Hold ੌ ੀ ਜ (Q R P) | Replaces the typing box `#input-box` with that text |
 | ← → ↓ | Next → fill the box with the new text → Next |
-| ← → → ↓ | The same for two segments |
+| ← → → ↓ | Next → fill the box with the new text (no second Next) |
 
 These are the extension's keys and timings. Clicking the bookmark twice doesn't add the keys twice.
 

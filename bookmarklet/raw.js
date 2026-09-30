@@ -77,8 +77,8 @@ void (() => {
   const norm = (e) => CONFIG.gurmukhi[e.key] || (/^Key[A-Z]$/.test(e.code) && e.code[3].toLowerCase()) ||
     (e.key || '').toLowerCase();
 
-  // Arrow sequences, each press within 1.5 s of the last: ← → ↓ fills one segment and
-  // ← → → ↓ fills two (see fillNext). Up is recorded too, so it breaks a sequence.
+  // Arrow sequences, each press within 1.5 s of the last: ← → ↓ is Next → fill → Next and
+  // ← → → ↓ is Next → fill (see fillNext). Up is recorded too, so it breaks a sequence.
   const ARROWS = { ArrowLeft: 'L', ArrowRight: 'R', ArrowDown: 'D', ArrowUp: 'U' };
   let arrows = '', lastArrow = 0;
   function arrow(e) {
@@ -86,12 +86,12 @@ void (() => {
     if (now - lastArrow > CONFIG.seqGapMs) arrows = '';
     lastArrow = now;
     arrows = (arrows + ARROWS[e.key]).slice(-4);
-    const n = arrows.endsWith('LRRD') ? 2 : arrows.endsWith('LRD') ? 1 : 0;
-    if (!n) return;
+    const lrrd = arrows.endsWith('LRRD');
+    if (!lrrd && !arrows.endsWith('LRD')) return;
     e.preventDefault();
     swallow.add('arrowdown'); // focus moves to the box; a held ↓ must not move its cursor
     arrows = '';
-    fillNext(n);
+    fillNext(!lrrd);
   }
 
   addEventListener('keydown', (e) => {
@@ -152,25 +152,23 @@ void (() => {
     return '';
   }
 
-  // Clicks Next, then n times: waits for the new text, copies it into the typing box and
-  // clicks Next. So n = 1 is Next → fill → Next, and n = 2 is Next → fill → Next → fill → Next.
+  // Clicks Next, waits for the new text and copies it into the typing box; with thenNext it
+  // clicks Next once more. So ← → ↓ is Next → fill → Next, and ← → → ↓ is Next → fill.
   // Stops quietly if the button or box is missing or the text does not change within 3 s.
-  async function fillNext(n) {
+  async function fillNext(thenNext) {
     if (busy) return;
     busy = true;
     try {
-      let before = sourceText();
+      const before = sourceText();
       if (!clickNext()) return;
-      for (let i = 0; i < n; i++) {
-        const text = await newText(before);
-        const box = $(CONFIG.input);
-        if (!text || !box) return;
-        await copy(text);
-        fill(box, text);
-        await sleep(CONFIG.settleMs); // let the page register the input before moving on
-        if (!clickNext()) return;
-        before = text;
-      }
+      const text = await newText(before);
+      const box = $(CONFIG.input);
+      if (!text || !box) return;
+      await copy(text);
+      fill(box, text);
+      if (!thenNext) return;
+      await sleep(CONFIG.settleMs); // let the page register the input before moving on
+      clickNext();
     } finally {
       // Leave the cursor in the typing box, at the end of its text.
       const box = $(CONFIG.input);
