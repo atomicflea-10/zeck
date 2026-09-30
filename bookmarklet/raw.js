@@ -152,7 +152,7 @@ void (() => {
     return '';
   }
 
-  // Clicks Next, waits for the new text and copies it into the typing box; with thenNext it
+  // Clicks Next, waits for the new text and puts it in the typing box (not the clipboard); with thenNext it
   // clicks Next once more. So ← → ↓ is Next → fill → Next, and ← → → ↓ is Next → fill.
   // Stops quietly if the button or box is missing or the text does not change within 3 s.
   async function fillNext(thenNext) {
@@ -164,7 +164,6 @@ void (() => {
       const text = await newText(before);
       const box = $(CONFIG.input);
       if (!text || !box) return;
-      await copy(text);
       fill(box, text);
       if (!thenNext) return;
       await sleep(CONFIG.settleMs); // let the page register the input before moving on

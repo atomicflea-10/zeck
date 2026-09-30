@@ -60,5 +60,5 @@ Open http://localhost:8080/web/ and drag the button. Then open http://127.0.0.1:
 
 - **The bookmark doesn't start by itself.** Click it after each page load.
 - **The selector is fixed in `raw.js`.** The extension let you change it on its options page.
-- **There's no special clipboard permission.** After a slow ← → ↓, Chrome may refuse the copy, but the box still gets filled.
+- **The arrow keys only fill the box.** The extension also copied the new text to the clipboard.
 - **Errors show a toast.** When an element is missing or the clipboard is blocked, a red toast appears. The extension stayed silent.
