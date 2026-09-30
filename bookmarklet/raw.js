@@ -1,18 +1,15 @@
-// Dark bookmarklet: readable source. A port of zeck/content.js that also talks to the typing page.
-// Build the javascript: URL with:  node bookmarklet/build.mjs            (uses hostUrl below)
-//                                   node bookmarklet/build.mjs --host https://YOUR_DOMAIN/
+// eOffice noting bookmarklet: readable source. A port of zeck/content.js that runs from a bookmark.
+// Build the javascript: URL with:  node bookmarklet/build.mjs
 // Rules for this file (the build strips comments line by line): no block comments, and a trailing
 // comment needs a space on both sides of the two slashes.
 void (() => {
   // ============================== CONFIG ==============================
+  // Change these when the target moves to the eOffice noting text area, then rebuild.
   const CONFIG = {
-    // Where web/index.html is served. CHANGE THIS if you host it elsewhere (e.g. 'https://YOUR_DOMAIN/'),
-    // then rebuild. Local testing: build with --host http://localhost:8080/web/ (see web/README.md).
-    hostUrl: 'https://atomicflea-10.github.io/zeck/typing/',
     // The keys only work on these sites (extension: location.href contains 'psssbtyping.com').
     // 127.0.0.1 is the local test page, bookmarklet/test-target.html.
     siteHosts: ['psssbtyping.com', '127.0.0.1'],
-    selector: '#sample-paragraph', // source element (extension default; the typing page can change it)
+    selector: '#sample-paragraph', // source element
     input: '#input-box', // typing box that gets filled
     next: '#next-segment-btn', // Next button
     chord: 'qr', // hold ੌ ੀ (Q R) → copy
@@ -26,8 +23,7 @@ void (() => {
   };
   // =====================================================================
 
-  const VERSION = 1, NS = 'dark', WIN_NAME = 'dark-typing-host';
-  const HOST_ORIGIN = new URL(CONFIG.hostUrl).origin;
+  const VERSION = 2;
   const $ = (s) => { try { return document.querySelector(s); } catch { return null; } };
 
   // Toast in a shadow root, so page styles can't touch it and it can't touch the page.
@@ -41,31 +37,25 @@ void (() => {
       toastEl = root.firstChild;
     }
     if (!toastHost.isConnected) document.documentElement.appendChild(toastHost);
-    toastEl.textContent = 'Dark: ' + msg;
+    toastEl.textContent = msg;
     toastEl.style.background = err ? '#b91c1c' : '#1f2937';
     toastEl.style.opacity = '1';
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => (toastEl.style.opacity = '0'), err ? 4000 : 2200);
   }
 
-  // Clicked on the typing page itself: nothing to control here.
-  if (location.origin === HOST_ORIGIN) {
-    toast('drag this link to the bookmarks bar, then click it on the target site.');
-    return;
-  }
   const onSite = () => CONFIG.siteHosts.some((h) => location.href.toLowerCase().includes(h.toLowerCase()));
   if (!onSite()) {
-    toast('this is not ' + CONFIG.siteHosts[0] + '. Keys stay off here.', true);
+    toast('Not on ' + CONFIG.siteHosts[0] + '. Click the bookmark on that site.', true);
     return;
   }
 
-  // Second click: keep the existing listeners and just reopen or focus the typing page.
-  const prev = window.__darkBridge;
+  // Second click: the keys are already on; don't add them twice.
+  const prev = window.__eofficeNoting;
   if (prev && prev.version === VERSION) {
-    prev.open();
+    prev.toast('On');
     return;
   }
-  let hostWin = prev ? prev.hostWin : null;
   if (prev) prev.destroy();
 
   // Like the extension: retire any earlier copy on this page (this also stops the extension's
@@ -75,8 +65,7 @@ void (() => {
   const opt = { capture: true, signal: ac.signal };
   document.addEventListener('sec:reset', () => destroy(), { once: true, signal: ac.signal });
 
-  let selector = CONFIG.selector, lastFire = 0, busy = false;
-  let acked = false, closedShown = false;
+  let lastFire = 0, busy = false;
   const held = new Set(), swallow = new Set();
 
   const editable = (e) => {
@@ -88,86 +77,6 @@ void (() => {
   const norm = (e) => CONFIG.gurmukhi[e.key] || (/^Key[A-Z]$/.test(e.code) && e.code[3].toLowerCase()) ||
     (e.key || '').toLowerCase();
 
-  // ---------- messaging (only to and from the exact typing-page origin) ----------
-  const send = (msg) => {
-    if (!hostWin || hostWin.closed) return;
-    try { hostWin.postMessage({ ns: NS, ...msg }, HOST_ORIGIN); } catch {}
-  };
-  const fail = (message, id) => { toast(message, true); send({ type: 'ERROR', message, id }); };
-
-  function openHost() {
-    if (!hostWin || hostWin.closed) {
-      let w = null;
-      // '' finds the typing page if this tab opened it before, without reloading it.
-      try { w = window.open('', WIN_NAME); } catch {}
-      if (!w) return toast('pop-up blocked. Allow pop-ups for this site, then click the bookmark again.', true);
-      let blank = false;
-      try { blank = w.location.href === 'about:blank'; } catch {} // cross-origin: already the typing page
-      if (blank) w.location.href = CONFIG.hostUrl;
-      if (w.closed) return toast('this site does not allow a link to the typing page. Use the extension here.', true);
-      hostWin = w;
-    }
-    acked = false;
-    closedShown = false;
-    try { hostWin.focus(); } catch {}
-    announce();
-  }
-
-  const info = () => ({ site: location.host, selector, input: CONFIG.input, next: CONFIG.next, version: VERSION });
-  const announce = () => send(acked ? { type: 'STATUS', alive: true } : { type: 'TARGET_READY', ...info() });
-
-  // Keeps saying hello until the typing page answers (and after it reloads), and notices when it closes.
-  function tick() {
-    if (hostWin && hostWin.closed) {
-      if (!closedShown) toast('control page closed. Click the bookmark to reopen it.');
-      closedShown = true;
-      acked = false;
-      return;
-    }
-    announce();
-  }
-  const timer = setInterval(tick, 1000);
-  document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && tick(), { signal: ac.signal });
-
-  addEventListener('message', (e) => {
-    const m = e.data;
-    if (e.origin !== HOST_ORIGIN || !hostWin || e.source !== hostWin || !m || m.ns !== NS) return;
-    switch (m.type) {
-      case 'HOST_READY':
-        if (!acked) toast('connected to the typing page');
-        acked = true;
-        if (m.selector) setSelector(m.selector);
-        send({ type: 'STATUS', alive: true, ...info() });
-        break;
-      case 'PING':
-        send({ type: 'STATUS', alive: true, id: m.id });
-        break;
-      case 'SET_SELECTOR':
-        setSelector(m.selector, m.id);
-        break;
-      case 'COPY_FROM_TARGET':
-        copyFrom('host', m.id);
-        break;
-      case 'PASTE_TO_TARGET':
-        pasteTo(m.text, m.id);
-        break;
-      case 'APPLY_MAPPING':
-        if (m.action === 'paste') paste('host', m.id);
-        else if (m.action === 'next1') fillNext(1, 'host', m.id);
-        else if (m.action === 'next2') fillNext(2, 'host', m.id);
-        else fail('unknown action ' + m.action, m.id);
-        break;
-    }
-  }, { signal: ac.signal });
-
-  function setSelector(sel, id) {
-    sel = String(sel || '').trim() || CONFIG.selector;
-    try { document.querySelector(sel); } catch { return fail('invalid CSS selector ' + sel, id); }
-    selector = sel;
-    send({ type: 'STATUS', ok: true, message: 'source selector: ' + sel, selector, id });
-  }
-
-  // ---------- keys (same triggers as the extension) ----------
   // Arrow sequences, each press within 1.5 s of the last: ← → ↓ fills one segment and
   // ← → → ↓ fills two (see fillNext). Up is recorded too, so it breaks a sequence.
   const ARROWS = { ArrowLeft: 'L', ArrowRight: 'R', ArrowDown: 'D', ArrowUp: 'U' };
@@ -182,7 +91,7 @@ void (() => {
     e.preventDefault();
     swallow.add('arrowdown'); // focus moves to the box; a held ↓ must not move its cursor
     arrows = '';
-    fillNext(n, 'keys');
+    fillNext(n);
   }
 
   addEventListener('keydown', (e) => {
@@ -197,50 +106,33 @@ void (() => {
     if (![...CONFIG.chord].every((c) => held.has(c))) return;
     // ੌ ੀ copies; ੌ ੀ ਜ pastes into the box. preventDefault stops ਜ landing in the box,
     // which has focus by the time the key's default action runs.
-    if (held.has(CONFIG.pasteKey)) { e.preventDefault(); paste('keys'); } else fireKeys();
+    if (held.has(CONFIG.pasteKey)) { e.preventDefault(); paste(); } else fire();
   }, opt);
   addEventListener('keyup', (e) => { held.delete(norm(e)); swallow.delete(norm(e)); }, opt);
   addEventListener('blur', () => { held.clear(); swallow.clear(); }, opt);
 
-  // ---------- actions ----------
   function sourceText() {
-    const el = $(selector);
+    const el = $(CONFIG.selector);
     return el ? (el.innerText || el.textContent || '').trim() : '';
   }
 
-  function fireKeys() {
+  // Copies silently, as in the extension; only a failure shows a toast.
+  async function fire() {
     const now = Date.now();
     if (now - lastFire < CONFIG.fireGapMs) return;
     lastFire = now;
-    copyFrom('keys');
-  }
-
-  // Copy: read the source element. From the keys it goes to the clipboard, silently, as in the
-  // extension. Either way the text is sent to the typing page's box.
-  async function copyFrom(via, id) {
     const text = sourceText();
-    if (!text) return fail('nothing found at ' + selector, id);
-    if (via === 'keys' && !(await copy(text))) toast('clipboard blocked; the text is on the typing page', true);
-    send({ type: 'COPY_FROM_TARGET', text, via, id });
+    if (!text) return toast('Nothing found at ' + CONFIG.selector, true);
+    if (!(await copy(text))) toast('Clipboard blocked', true);
   }
 
-  // Paste: replace whatever is in the typing box with the source text; the cursor stays there.
-  function paste(via, id) {
+  // Replaces whatever is in the typing box with the element's text and leaves the cursor there.
+  function paste() {
     const text = sourceText(), box = $(CONFIG.input);
-    if (!text) return fail('nothing found at ' + selector, id);
-    if (!box) return fail(CONFIG.input + ' not found', id);
+    if (!text) return toast('Nothing found at ' + CONFIG.selector, true);
+    if (!box) return toast(CONFIG.input + ' not found', true);
     fill(box, text);
-    if (via === 'keys') held.forEach((k) => swallow.add(k));
-    send({ type: 'APPLY_MAPPING', action: 'paste', text, via, id });
-  }
-
-  // Send: the typing page's text goes into the typing box.
-  function pasteTo(text, id) {
-    const box = $(CONFIG.input);
-    if (!box) return fail(CONFIG.input + ' not found', id);
-    fill(box, String(text == null ? '' : text));
-    toast('sent');
-    send({ type: 'STATUS', ok: true, message: 'sent to ' + CONFIG.input, id });
+    held.forEach((k) => swallow.add(k));
   }
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -262,26 +154,23 @@ void (() => {
 
   // Clicks Next, then n times: waits for the new text, copies it into the typing box and
   // clicks Next. So n = 1 is Next → fill → Next, and n = 2 is Next → fill → Next → fill → Next.
-  async function fillNext(n, via, id) {
+  // Stops quietly if the button or box is missing or the text does not change within 3 s.
+  async function fillNext(n) {
     if (busy) return;
     busy = true;
-    const action = 'next' + n;
     try {
       let before = sourceText();
-      if (!clickNext()) return fail(CONFIG.next + ' not found or disabled', id);
+      if (!clickNext()) return;
       for (let i = 0; i < n; i++) {
         const text = await newText(before);
         const box = $(CONFIG.input);
-        if (!text) return fail('text did not change within ' + CONFIG.waitMs / 1000 + ' s', id);
-        if (!box) return fail(CONFIG.input + ' not found', id);
-        if (via === 'keys') await copy(text);
+        if (!text || !box) return;
+        await copy(text);
         fill(box, text);
-        send({ type: 'APPLY_MAPPING', action, step: i + 1, of: n, text, via, id });
         await sleep(CONFIG.settleMs); // let the page register the input before moving on
-        if (!clickNext()) return send({ type: 'STATUS', ok: true, message: 'Next is disabled; stopped', id });
+        if (!clickNext()) return;
         before = text;
       }
-      send({ type: 'STATUS', ok: true, message: action + ' done', id });
     } finally {
       // Leave the cursor in the typing box, at the end of its text.
       const box = $(CONFIG.input);
@@ -300,8 +189,7 @@ void (() => {
     try { ok = document.execCommand('insertText', false, text); } catch {}
     if (!ok || box.value !== text) {
       const proto = box instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
-      const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
-      setter.call(box, text);
+      Object.getOwnPropertyDescriptor(proto, 'value').set.call(box, text);
       box.dispatchEvent(new Event('input', { bubbles: true }));
       box.dispatchEvent(new Event('change', { bubbles: true }));
     }
@@ -325,13 +213,11 @@ void (() => {
 
   function destroy() {
     ac.abort();
-    clearInterval(timer);
     if (toastHost) toastHost.remove();
-    if (window.__darkBridge === api) delete window.__darkBridge;
+    if (window.__eofficeNoting === api) delete window.__eofficeNoting;
   }
 
-  const api = { version: VERSION, open: openHost, destroy, get hostWin() { return hostWin; } };
-  window.__darkBridge = api;
-  toast('listening');
-  openHost();
+  const api = { version: VERSION, toast, destroy };
+  window.__eofficeNoting = api;
+  toast('On');
 })();

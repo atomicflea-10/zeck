@@ -1,6 +1,6 @@
 // Local test server for the repo root, on port 8080. No dependencies.
 //   node bookmarklet/serve.mjs
-// Typing page: http://localhost:8080/web/
+// Page:        http://localhost:8080/web/
 // Test target: http://127.0.0.1:8080/bookmarklet/test-target.html  (a different origin, on purpose)
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -25,6 +25,6 @@ createServer(async (req, res) => {
     res.writeHead(404).end('not found');
   }
 }).listen(port, () => {
-  console.log(`Typing page: http://localhost:${port}/web/`);
+  console.log(`Page:        http://localhost:${port}/web/`);
   console.log(`Test target: http://127.0.0.1:${port}/bookmarklet/test-target.html`);
 });
