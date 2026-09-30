@@ -9,7 +9,7 @@ Page: **https://eo1.vercel.app**
 1. Open Chrome and press **Ctrl+Shift+B** (Mac: **Cmd+Shift+B**) to show the bookmarks bar.
 2. Open **eo1.vercel.app**.
 3. Drag the blue **eOffice noting** button onto the bookmarks bar.
-4. Open the site and click the bookmark. A small **On** appears in the corner.
+4. Open the site and click the bookmark. Nothing appears; the keys are simply on.
 5. After every reload of the site, click the bookmark again.
 
 No bookmarks bar? Press **Ctrl+Shift+O**, choose **⋮ → Add new bookmark**, and paste the text of `bookmarklet/bookmarklet.url.txt` as the URL.
@@ -61,4 +61,3 @@ Open http://localhost:8080/web/ and drag the button. Then open http://127.0.0.1:
 - **The bookmark doesn't start by itself.** Click it after each page load.
 - **The selector is fixed in `raw.js`.** The extension let you change it on its options page.
 - **The arrow keys only fill the box.** The extension also copied the new text to the clipboard.
-- **Errors show a toast.** When an element is missing or the clipboard is blocked, a red toast appears. The extension stayed silent.

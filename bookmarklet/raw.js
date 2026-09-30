@@ -23,39 +23,15 @@ void (() => {
   };
   // =====================================================================
 
-  const VERSION = 2;
+  const VERSION = 3;
   const $ = (s) => { try { return document.querySelector(s); } catch { return null; } };
 
-  // Toast in a shadow root, so page styles can't touch it and it can't touch the page.
-  let toastHost, toastEl, toastTimer;
-  function toast(msg, err) {
-    if (!toastHost) {
-      toastHost = document.createElement('div');
-      toastHost.style.cssText = 'all:initial;position:fixed;z-index:2147483647;right:16px;bottom:16px;pointer-events:none';
-      const root = toastHost.attachShadow({ mode: 'open' });
-      root.innerHTML = '<div style="font:13px/1.4 system-ui,sans-serif;padding:8px 12px;border-radius:6px;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:opacity .2s;max-width:340px"></div>';
-      toastEl = root.firstChild;
-    }
-    if (!toastHost.isConnected) document.documentElement.appendChild(toastHost);
-    toastEl.textContent = msg;
-    toastEl.style.background = err ? '#b91c1c' : '#1f2937';
-    toastEl.style.opacity = '1';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (toastEl.style.opacity = '0'), err ? 4000 : 2200);
-  }
-
   const onSite = () => CONFIG.siteHosts.some((h) => location.href.toLowerCase().includes(h.toLowerCase()));
-  if (!onSite()) {
-    toast('Not on ' + CONFIG.siteHosts[0] + '. Click the bookmark on that site.', true);
-    return;
-  }
+  if (!onSite()) return;
 
   // Second click: the keys are already on; don't add them twice.
   const prev = window.__eofficeNoting;
-  if (prev && prev.version === VERSION) {
-    prev.toast('On');
-    return;
-  }
+  if (prev && prev.version === VERSION) return;
   if (prev) prev.destroy();
 
   // Like the extension: retire any earlier copy on this page (this also stops the extension's
@@ -116,21 +92,19 @@ void (() => {
     return el ? (el.innerText || el.textContent || '').trim() : '';
   }
 
-  // Copies silently, as in the extension; only a failure shows a toast.
+  // Copies silently, as in the extension. Nothing is shown on the page, whether or not it works.
   async function fire() {
     const now = Date.now();
     if (now - lastFire < CONFIG.fireGapMs) return;
     lastFire = now;
     const text = sourceText();
-    if (!text) return toast('Nothing found at ' + CONFIG.selector, true);
-    if (!(await copy(text))) toast('Clipboard blocked', true);
+    if (text) await copy(text);
   }
 
   // Replaces whatever is in the typing box with the element's text and leaves the cursor there.
   function paste() {
     const text = sourceText(), box = $(CONFIG.input);
-    if (!text) return toast('Nothing found at ' + CONFIG.selector, true);
-    if (!box) return toast(CONFIG.input + ' not found', true);
+    if (!text || !box) return;
     fill(box, text);
     held.forEach((k) => swallow.add(k));
   }
@@ -210,11 +184,9 @@ void (() => {
 
   function destroy() {
     ac.abort();
-    if (toastHost) toastHost.remove();
     if (window.__eofficeNoting === api) delete window.__eofficeNoting;
   }
 
-  const api = { version: VERSION, toast, destroy };
+  const api = { version: VERSION, destroy };
   window.__eofficeNoting = api;
-  toast('On');
 })();
